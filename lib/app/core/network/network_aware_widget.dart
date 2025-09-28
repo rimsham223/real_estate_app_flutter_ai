@@ -36,21 +36,17 @@ class _NetworkAwareWidgetState extends State<NetworkAwareWidget> {
     return BlocBuilder<NetworkCubit, NetworkState>(
       builder: (context, state) {
         final isOffline = state is NetworkDisconnected;
-        
+
         return Stack(
           children: [
             // The main content - always in the tree but behind the offline UI when offline
             IgnorePointer(
               ignoring: isOffline,
-              child: Opacity(
-                opacity: isOffline ? 0.0 : 1.0,
-                child: widget.child,
-              ),
+              child: Opacity(opacity: isOffline ? 0.0 : 1.0, child: widget.child),
             ),
-            
+
             // Offline UI - only shown when offline
-            if (isOffline)
-              widget.offlineChild ?? _buildOfflineUI(context),
+            if (isOffline) widget.offlineChild ?? _buildOfflineUI(context),
           ],
         );
       },
