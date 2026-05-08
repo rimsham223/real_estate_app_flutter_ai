@@ -12,26 +12,64 @@ class PropertySearchBloc extends Bloc<PropertySearchEvent, PropertySearchState> 
 
   PropertySearchBloc(this._repository) : super(PropertySearchState.initial()) {
     on<LoadPropertiesEvent>(_onLoadProperties);
+    on<SearchPropertiesEvent>(_onSearchProperties);
     on<UpdateFiltersEvent>(_onUpdateFilters);
+    on<ClearFiltersEvent>(_onClearFilters);
   }
 
   Future<void> _onLoadProperties(LoadPropertiesEvent event, Emitter<PropertySearchState> emit) async {
-    emit(state.copyWith(status: const Loading<void>()));
+    await _load(event.filters.normalized(), emit, refreshFilters: true);
+  }
+
+  Future<void> _onSearchProperties(SearchPropertiesEvent event, Emitter<PropertySearchState> emit) async {
+    await _load(event.filters.normalized(), emit);
+  }
+
+  Future<void> _onUpdateFilters(UpdateFiltersEvent event, Emitter<PropertySearchState> emit) async {
+    final filters = event.filters.normalized();
+    emit(state.copyWith(currentFilters: filters, clearError: true));
+    add(SearchPropertiesEvent(filters));
+  }
+
+  Future<void> _onClearFilters(ClearFiltersEvent event, Emitter<PropertySearchState> emit) async {
+    const filters = PropertyFilters();
+    emit(state.copyWith(currentFilters: filters, clearError: true));
+    add(const SearchPropertiesEvent(filters));
+  }
+
+  Future<void> _load(
+    PropertyFilters filters,
+    Emitter<PropertySearchState> emit, {
+    bool refreshFilters = false,
+  }) async {
+    emit(state.copyWith(status: const Loading<void>(), currentFilters: filters, clearError: true));
     try {
-      final filters = event.filters;
       final properties = await _repository.searchProperties(
         searchQuery: filters.searchQuery,
         areaIds: filters.areaIds,
         compoundIds: filters.compoundIds,
-        minPrice: filters.minPrice?.toDouble(),
-        maxPrice: filters.maxPrice?.toDouble(),
-        minBedrooms: filters.bedrooms,
-        maxBedrooms: filters.bedrooms,
+        propertyTypeIds: filters.propertyTypeIds,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
+        minBedrooms: filters.minBedrooms,
+        maxBedrooms: filters.maxBedrooms,
       );
+      final areas = refreshFilters || state.areas.isEmpty ? await _repository.getAreas() : state.areas;
+      final compounds = refreshFilters || state.compounds.isEmpty
+          ? await _repository.getCompounds()
+          : state.compounds;
+      final propertyTypes = refreshFilters || state.propertyTypes.isEmpty
+          ? await _repository.getPropertyTypes()
+          : state.propertyTypes;
+
       emit(state.copyWith(
         status: const Success<void>(null),
         properties: properties,
+        areas: areas,
+        compounds: compounds,
+        propertyTypes: propertyTypes,
         currentFilters: filters,
+        clearError: true,
       ));
     } catch (e) {
       emit(state.copyWith(
@@ -39,10 +77,5 @@ class PropertySearchBloc extends Bloc<PropertySearchEvent, PropertySearchState> 
         errorMessage: e.toString(),
       ));
     }
-  }
-
-  Future<void> _onUpdateFilters(UpdateFiltersEvent event, Emitter<PropertySearchState> emit) async {
-    emit(state.copyWith(currentFilters: event.filters));
-    add(LoadPropertiesEvent(event.filters));
   }
 }

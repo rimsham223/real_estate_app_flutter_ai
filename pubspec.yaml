@@ -54,6 +54,7 @@ flutter:
   
   assets:
     - properties.json
+    - assets/dataset.json
     - assets/nawy_logo.png
     - assets/app_icon.png
 
