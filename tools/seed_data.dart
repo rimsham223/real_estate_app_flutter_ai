@@ -26,5 +26,5 @@ void main() async {
       'images': [prop['images'][0]], // images must be an array
     });
   }
-  print('Dataset seeded');
+  stdout.writeln('Dataset seeded');
 }

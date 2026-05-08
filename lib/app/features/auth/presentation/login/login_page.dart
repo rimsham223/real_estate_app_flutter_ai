@@ -54,17 +54,19 @@ class _LoginPageState extends State<LoginPage> {
                 final email = emailController.text.trim();
                 final name = nameController.text.trim();
                 if (email.isEmpty) return;
+
+                final authService = getIt<AuthService>();
                 try {
-                  await getIt<AuthService>().sendOtp(email);
-                  if (!mounted) return;
-                  // Pass both email and name as a map
-                  Navigator.pushNamed(
-                    context,
+                  await authService.sendOtp(email);
+                  if (!context.mounted) return;
+
+                  Navigator.of(context).pushNamed(
                     '/otp',
                     arguments: {'email': email, 'name': name.isEmpty ? null : name},
                   );
                 } catch (e) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(e.toString())),
                   );

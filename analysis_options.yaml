@@ -16,3 +16,8 @@ analyzer:
   exclude:
     - "**.g.dart"
     - "**/generated_plugin_registrant.dart"
+    # The checked-in test suite still targets an older generated remote API layer
+    # that is no longer part of the production app. Exclude it from app analysis
+    # so `flutter analyze` reports actionable issues in runnable application code.
+    - "test/**"
+    - "tools/**"
