@@ -63,6 +63,8 @@ class PropertyImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final image = property.image;
+
     return Container(
       height: 200,
       width: double.infinity,
@@ -70,19 +72,25 @@ class PropertyImage extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         color: theme.colorScheme.surfaceContainerHighest,
       ),
-      child: property.image != null
-          ? ClipRRect(
+      child: image == null
+          ? const PropertyImagePlaceholder()
+          : ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              child: CachedNetworkImage(
-                imageUrl: property.image!,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const PropertyImagePlaceholder(),
-                errorWidget: (context, url, error) => const PropertyImagePlaceholder(),
-                fadeInDuration: const Duration(milliseconds: 300),
-                fadeOutDuration: const Duration(milliseconds: 100),
-              ),
-            )
-          : const PropertyImagePlaceholder(),
+              child: image.startsWith('assets/')
+                  ? Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => const PropertyImagePlaceholder(),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: image,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const PropertyImagePlaceholder(),
+                      errorWidget: (context, url, error) => const PropertyImagePlaceholder(),
+                      fadeInDuration: const Duration(milliseconds: 300),
+                      fadeOutDuration: const Duration(milliseconds: 100),
+                    ),
+            ),
     );
   }
 }

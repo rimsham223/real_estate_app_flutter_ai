@@ -32,6 +32,27 @@ class AuthService {
     });
   }
 
+  Future<Map<String, dynamic>?> getProfile() async {
+    final user = currentUser;
+    if (user == null) return null;
+
+    final profile = await _supabase.from('profiles').select().eq('id', user.id).maybeSingle();
+    return profile;
+  }
+
+  Future<void> updateProfile({String? fullName, String? phone}) async {
+    final user = currentUser;
+    if (user == null) return;
+
+    await _supabase.from('profiles').upsert({
+      'id': user.id,
+      'email': user.email,
+      'full_name': fullName,
+      'phone': phone,
+      'updated_at': DateTime.now().toIso8601String(),
+    });
+  }
+
   Future<void> signOut() async {
     await _supabase.auth.signOut();
   }
