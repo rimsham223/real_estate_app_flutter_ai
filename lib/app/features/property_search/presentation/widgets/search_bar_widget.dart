@@ -8,6 +8,7 @@ class SearchBarWidget extends StatefulWidget {
   final bool isLoading;
   final String? searchQuery;
   final Function(String)? onChanged;
+  final VoidCallback? onSubmitted;
 
   const SearchBarWidget({
     super.key,
@@ -17,6 +18,7 @@ class SearchBarWidget extends StatefulWidget {
     this.isLoading = false,
     this.searchQuery,
     this.onChanged,
+    this.onSubmitted,
   });
 
   @override
@@ -76,8 +78,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               focusNode: _focusNode,
               textInputAction: TextInputAction.search,
               onChanged: (value) {
+                setState(() {});
                 widget.onChanged?.call(value);
               },
+              onSubmitted: (_) => widget.onSubmitted?.call(),
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 prefixIcon: Icon(
@@ -99,6 +103,14 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               ),
               style: theme.textTheme.bodyMedium,
             ),
+          ),
+
+          IconButton(
+            tooltip: 'Search',
+            onPressed: widget.isLoading ? null : widget.onSubmitted,
+            icon: widget.isLoading
+                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                : const Icon(Icons.arrow_forward_rounded),
           ),
 
           // Filter button
