@@ -1,8 +1,7 @@
-import 'package:equatable/equatable.dart';
-import 'package:nawy_ai_app/app/features/property_search/domain/models/area.dart';
+import 'area.dart';
+import 'developer.dart';
 
-/// Domain entity for Compound - used in business logic
-class Compound extends Equatable {
+class Compound {
   final int id;
   final int areaId;
   final String name;
@@ -12,10 +11,11 @@ class Compound extends Equatable {
   final DateTime? updatedAt;
   final int? nawyOrganizationId;
   final bool hasOffers;
-  final Area? area;
   final bool isFavorite;
+  final Area? area;
+  final Developer? developer;
 
-  const Compound({
+  Compound({
     required this.id,
     required this.areaId,
     required this.name,
@@ -24,54 +24,41 @@ class Compound extends Equatable {
     this.developerId,
     this.updatedAt,
     this.nawyOrganizationId,
-    required this.hasOffers,
-    this.area,
+    this.hasOffers = false,
     this.isFavorite = false,
+    this.area,
+    this.developer,
   });
 
-  Compound copyWith({
-    int? id,
-    int? areaId,
-    String? name,
-    String? slug,
-    String? imagePath,
-    int? developerId,
-    DateTime? updatedAt,
-    int? nawyOrganizationId,
-    bool? hasOffers,
-    Area? area,
-    bool? isFavorite,
-  }) {
+  factory Compound.fromJson(Map<String, dynamic> json) {
     return Compound(
-      id: id ?? this.id,
-      areaId: areaId ?? this.areaId,
-      name: name ?? this.name,
-      slug: slug ?? this.slug,
-      imagePath: imagePath ?? this.imagePath,
-      developerId: developerId ?? this.developerId,
-      updatedAt: updatedAt ?? this.updatedAt,
-      nawyOrganizationId: nawyOrganizationId ?? this.nawyOrganizationId,
-      hasOffers: hasOffers ?? this.hasOffers,
-      area: area ?? this.area,
-      isFavorite: isFavorite ?? this.isFavorite,
+      id: json['id'],
+      areaId: json['area_id'],
+      name: json['name'] ?? '',
+      slug: json['slug'],
+      imagePath: json['image_path'],
+      developerId: json['developer_id'],
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      nawyOrganizationId: json['nawy_organization_id'],
+      hasOffers: json['has_offers'] ?? false,
+      isFavorite: json['is_favorite'] ?? false,
+      area: json['areas'] != null ? Area.fromJson(json['areas']) : null,
+      developer: json['developers'] != null ? Developer.fromJson(json['developers']) : null,
     );
   }
 
-  @override
-  List<Object?> get props => [
-    id,
-    areaId,
-    name,
-    slug,
-    imagePath,
-    developerId,
-    updatedAt,
-    nawyOrganizationId,
-    hasOffers,
-    area,
-    isFavorite,
-  ];
-
-  @override
-  String toString() => 'Compound(id: $id, name: $name, isFavorite: $isFavorite)';
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'area_id': areaId,
+      'name': name,
+      'slug': slug,
+      'image_path': imagePath,
+      'developer_id': developerId,
+      'updated_at': updatedAt?.toIso8601String(),
+      'nawy_organization_id': nawyOrganizationId,
+      'has_offers': hasOffers,
+      'is_favorite': isFavorite,
+    };
+  }
 }

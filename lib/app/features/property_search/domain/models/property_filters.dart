@@ -1,61 +1,48 @@
-import 'package:equatable/equatable.dart';
-
-class PropertyFilters extends Equatable {
-  final List<int> selectedAreaIds;
-  final List<int> selectedCompoundIds;
-  final int? minPrice;
-  final int? maxPrice;
-  final int? minBedrooms;
-  final int? maxBedrooms;
-  final List<int> selectedPropertyTypeIds;
+class PropertyFilters {
+  final String? searchQuery;
+  final List<int>? areaIds;
+  final List<int>? compoundIds;
+  final double? minPrice;
+  final double? maxPrice;
+  final int? bedrooms;
+  final String? propertyType;
 
   const PropertyFilters({
-    this.selectedAreaIds = const [],
-    this.selectedCompoundIds = const [],
+    this.searchQuery,
+    this.areaIds,
+    this.compoundIds,
     this.minPrice,
     this.maxPrice,
-    this.minBedrooms,
-    this.maxBedrooms,
-    this.selectedPropertyTypeIds = const [],
+    this.bedrooms,
+    this.propertyType,
   });
 
   PropertyFilters copyWith({
-    List<int>? selectedAreaIds,
-    List<int>? selectedCompoundIds,
-    int? minPrice,
-    int? maxPrice,
-    int? minBedrooms,
-    int? maxBedrooms,
-    List<int>? selectedPropertyTypeIds,
+    String? searchQuery,
+    List<int>? areaIds,
+    List<int>? compoundIds,
+    double? minPrice,
+    double? maxPrice,
+    int? bedrooms,
+    String? propertyType,
   }) {
     return PropertyFilters(
-      selectedAreaIds: selectedAreaIds ?? this.selectedAreaIds,
-      selectedCompoundIds: selectedCompoundIds ?? this.selectedCompoundIds,
+      searchQuery: searchQuery ?? this.searchQuery,
+      areaIds: areaIds ?? this.areaIds,
+      compoundIds: compoundIds ?? this.compoundIds,
       minPrice: minPrice ?? this.minPrice,
       maxPrice: maxPrice ?? this.maxPrice,
-      minBedrooms: minBedrooms ?? this.minBedrooms,
-      maxBedrooms: maxBedrooms ?? this.maxBedrooms,
-      selectedPropertyTypeIds: selectedPropertyTypeIds ?? this.selectedPropertyTypeIds,
+      bedrooms: bedrooms ?? this.bedrooms,
+      propertyType: propertyType ?? this.propertyType,
     );
   }
 
-  bool get hasFilters =>
-      selectedAreaIds.isNotEmpty ||
-      selectedCompoundIds.isNotEmpty ||
-      minPrice != null ||
-      maxPrice != null ||
-      minBedrooms != null ||
-      maxBedrooms != null ||
-      selectedPropertyTypeIds.isNotEmpty;
-
-  @override
-  List<Object?> get props => [
-    selectedAreaIds,
-    selectedCompoundIds,
-    minPrice,
-    maxPrice,
-    minBedrooms,
-    maxBedrooms,
-    selectedPropertyTypeIds,
-  ];
+  bool get hasFilters {
+    return searchQuery != null ||
+        (areaIds?.isNotEmpty ?? false) ||
+        (compoundIds?.isNotEmpty ?? false) ||
+        minPrice != null ||
+        maxPrice != null ||
+        bedrooms != null;
+  }
 }

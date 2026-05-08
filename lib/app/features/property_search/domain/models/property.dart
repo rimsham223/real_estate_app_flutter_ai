@@ -1,221 +1,177 @@
-import 'package:equatable/equatable.dart';
-import 'package:nawy_ai_app/app/features/property_search/domain/models/area.dart';
-import 'package:nawy_ai_app/app/features/property_search/domain/models/developer.dart';
-import 'package:nawy_ai_app/app/features/property_search/domain/models/property_type.dart';
+import 'area.dart';
+import 'compound.dart';
+import 'developer.dart';
+import 'property_type.dart';
 
-/// Domain entity for Property - pure business logic model
-class Property extends Equatable {
+class Property {
   final int id;
   final String name;
   final String? slug;
-  final PropertyType? propertyType;
-  final PropertyCompound? compound;
-  final Area? area;
-  final Developer? developer;
-  final String? image;
-  final String? finishing;
-  final double? minUnitArea;
-  final double? maxUnitArea;
+  final int? areaId;
+  final int? compoundId;
+  final int? developerId;
   final double? minPrice;
   final double? maxPrice;
+  final int? numberOfBedrooms;
+  final int? numberOfBathrooms;
+  final double? minUnitArea;
+  final double? maxUnitArea;
+  final PropertyType? propertyType;
+  final List<String> images;
   final String? currency;
+  final String? finishing;
   final int? maxInstallmentYears;
   final String? maxInstallmentYearsMonths;
-  final int? minInstallments;
-  final int? minDownPayment;
-  final int? numberOfBathrooms;
-  final int? numberOfBedrooms;
-  final String? minReadyBy;
-  final int? sponsored;
-  final bool newProperty;
-  final bool resale;
-  final bool financing;
-  final bool hasOffers;
-  final String? offerTitle;
-  final bool limitedTimeOffer;
-  final String? rankingType;
-  final int? recommendedFinancing;
-  final double? propertyRanking;
-  final int? compoundRanking;
-  final List<dynamic>? tags;
+  final Area? area;
+  final Compound? compound;
+  final Developer? developer;
   final bool isFavorite;
 
-  const Property({
+  Property({
     required this.id,
     required this.name,
     this.slug,
-    this.propertyType,
-    this.compound,
-    this.area,
-    this.developer,
-    this.image,
-    this.finishing,
-    this.minUnitArea,
-    this.maxUnitArea,
+    this.areaId,
+    this.compoundId,
+    this.developerId,
     this.minPrice,
     this.maxPrice,
-    this.currency,
+    this.numberOfBedrooms,
+    this.numberOfBathrooms,
+    this.minUnitArea,
+    this.maxUnitArea,
+    this.propertyType,
+    this.images = const [],
+    this.currency = 'EGP',
+    this.finishing,
     this.maxInstallmentYears,
     this.maxInstallmentYearsMonths,
-    this.minInstallments,
-    this.minDownPayment,
-    this.numberOfBathrooms,
-    this.numberOfBedrooms,
-    this.minReadyBy,
-    this.sponsored,
-    this.newProperty = false,
-    this.resale = false,
-    this.financing = false,
-    this.hasOffers = false,
-    this.offerTitle,
-    this.limitedTimeOffer = false,
-    this.rankingType,
-    this.recommendedFinancing,
-    this.propertyRanking,
-    this.compoundRanking,
-    this.tags,
+    this.area,
+    this.compound,
+    this.developer,
     this.isFavorite = false,
   });
+
+  String? get image => images.isNotEmpty ? images.first : null;
+
+  factory Property.fromJson(Map<String, dynamic> json) {
+    Compound? compound;
+    if (json['compounds'] != null) {
+      compound = Compound.fromJson(json['compounds']);
+    }
+
+    Area? area;
+    if (json['areas'] != null) {
+      area = Area.fromJson(json['areas']);
+    } else if (compound?.area != null) {
+      area = compound?.area;
+    }
+
+    Developer? developer;
+    if (json['developers'] != null) {
+      developer = Developer.fromJson(json['developers']);
+    }
+
+    PropertyType? propertyType;
+    if (json['property_types'] != null) {
+      propertyType = PropertyType.fromJson(json['property_types']);
+    }
+
+    return Property(
+      id: json['id'],
+      name: json['name'] ?? '',
+      slug: json['slug'],
+      areaId: json['area_id'],
+      compoundId: json['compound_id'],
+      developerId: json['developer_id'],
+      minPrice: (json['min_price'] as num?)?.toDouble(),
+      maxPrice: (json['max_price'] as num?)?.toDouble(),
+      numberOfBedrooms: json['bedrooms'] ?? json['number_of_bedrooms'],
+      numberOfBathrooms: json['bath'] ?? json['number_of_bathrooms'],
+      minUnitArea: (json['area'] as num?)?.toDouble() ?? (json['min_unit_area'] as num?)?.toDouble(),
+      maxUnitArea: (json['max_unit_area'] as num?)?.toDouble(),
+      propertyType: propertyType,
+      images: json['images'] != null ? List<String>.from(json['images']) : [],
+      currency: json['currency'] ?? 'EGP',
+      finishing: json['finishing'],
+      maxInstallmentYears: json['max_installment_years'],
+      maxInstallmentYearsMonths: json['max_installment_years_months'],
+      area: area,
+      compound: compound,
+      developer: developer,
+      isFavorite: json['is_favorite'] ?? false,
+    );
+  }
 
   Property copyWith({
     int? id,
     String? name,
     String? slug,
-    PropertyType? propertyType,
-    PropertyCompound? compound,
-    Area? area,
-    Developer? developer,
-    String? image,
-    String? finishing,
-    double? minUnitArea,
-    double? maxUnitArea,
+    int? areaId,
+    int? compoundId,
+    int? developerId,
     double? minPrice,
     double? maxPrice,
+    int? numberOfBedrooms,
+    int? numberOfBathrooms,
+    double? minUnitArea,
+    double? maxUnitArea,
+    PropertyType? propertyType,
+    List<String>? images,
     String? currency,
+    String? finishing,
     int? maxInstallmentYears,
     String? maxInstallmentYearsMonths,
-    int? minInstallments,
-    int? minDownPayment,
-    int? numberOfBathrooms,
-    int? numberOfBedrooms,
-    String? minReadyBy,
-    int? sponsored,
-    bool? newProperty,
-    bool? resale,
-    bool? financing,
-    bool? hasOffers,
-    String? offerTitle,
-    bool? limitedTimeOffer,
-    String? rankingType,
-    int? recommendedFinancing,
-    double? propertyRanking,
-    int? compoundRanking,
-    List<dynamic>? tags,
+    Area? area,
+    Compound? compound,
+    Developer? developer,
     bool? isFavorite,
   }) {
     return Property(
       id: id ?? this.id,
       name: name ?? this.name,
       slug: slug ?? this.slug,
-      propertyType: propertyType ?? this.propertyType,
-      compound: compound ?? this.compound,
-      area: area ?? this.area,
-      developer: developer ?? this.developer,
-      image: image ?? this.image,
-      finishing: finishing ?? this.finishing,
-      minUnitArea: minUnitArea ?? this.minUnitArea,
-      maxUnitArea: maxUnitArea ?? this.maxUnitArea,
+      areaId: areaId ?? this.areaId,
+      compoundId: compoundId ?? this.compoundId,
+      developerId: developerId ?? this.developerId,
       minPrice: minPrice ?? this.minPrice,
       maxPrice: maxPrice ?? this.maxPrice,
+      numberOfBedrooms: numberOfBedrooms ?? this.numberOfBedrooms,
+      numberOfBathrooms: numberOfBathrooms ?? this.numberOfBathrooms,
+      minUnitArea: minUnitArea ?? this.minUnitArea,
+      maxUnitArea: maxUnitArea ?? this.maxUnitArea,
+      propertyType: propertyType ?? this.propertyType,
+      images: images ?? this.images,
       currency: currency ?? this.currency,
+      finishing: finishing ?? this.finishing,
       maxInstallmentYears: maxInstallmentYears ?? this.maxInstallmentYears,
       maxInstallmentYearsMonths: maxInstallmentYearsMonths ?? this.maxInstallmentYearsMonths,
-      minInstallments: minInstallments ?? this.minInstallments,
-      minDownPayment: minDownPayment ?? this.minDownPayment,
-      numberOfBathrooms: numberOfBathrooms ?? this.numberOfBathrooms,
-      numberOfBedrooms: numberOfBedrooms ?? this.numberOfBedrooms,
-      minReadyBy: minReadyBy ?? this.minReadyBy,
-      sponsored: sponsored ?? this.sponsored,
-      newProperty: newProperty ?? this.newProperty,
-      resale: resale ?? this.resale,
-      financing: financing ?? this.financing,
-      hasOffers: hasOffers ?? this.hasOffers,
-      offerTitle: offerTitle ?? this.offerTitle,
-      limitedTimeOffer: limitedTimeOffer ?? this.limitedTimeOffer,
-      rankingType: rankingType ?? this.rankingType,
-      recommendedFinancing: recommendedFinancing ?? this.recommendedFinancing,
-      propertyRanking: propertyRanking ?? this.propertyRanking,
-      compoundRanking: compoundRanking ?? this.compoundRanking,
-      tags: tags ?? this.tags,
+      area: area ?? this.area,
+      compound: compound ?? this.compound,
+      developer: developer ?? this.developer,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
-  @override
-  List<Object?> get props => [
-    id,
-    name,
-    slug,
-    propertyType,
-    compound,
-    area,
-    developer,
-    image,
-    finishing,
-    minUnitArea,
-    maxUnitArea,
-    minPrice,
-    maxPrice,
-    currency,
-    maxInstallmentYears,
-    maxInstallmentYearsMonths,
-    minInstallments,
-    minDownPayment,
-    numberOfBathrooms,
-    numberOfBedrooms,
-    minReadyBy,
-    sponsored,
-    newProperty,
-    resale,
-    financing,
-    hasOffers,
-    offerTitle,
-    limitedTimeOffer,
-    rankingType,
-    recommendedFinancing,
-    propertyRanking,
-    compoundRanking,
-    tags,
-    isFavorite,
-  ];
-
-  @override
-  String toString() => 'Property(id: $id, name: $name, isFavorite: $isFavorite)';
-}
-
-/// Domain entity for PropertyCompound - nested compound info in properties
-class PropertyCompound extends Equatable {
-  final int id;
-  final String name;
-  final double? latitude;
-  final double? longitude;
-  final String? slug;
-  final int? sponsored;
-  final int? nawyOrganizationId;
-
-  const PropertyCompound({
-    required this.id,
-    required this.name,
-    this.latitude,
-    this.longitude,
-    this.slug,
-    this.sponsored,
-    this.nawyOrganizationId,
-  });
-
-  @override
-  List<Object?> get props => [id, name, latitude, longitude, slug, sponsored, nawyOrganizationId];
-
-  @override
-  String toString() => 'PropertyCompound(id: $id, name: $name)';
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'slug': slug,
+      'area_id': areaId,
+      'compound_id': compoundId,
+      'developer_id': developerId,
+      'min_price': minPrice,
+      'max_price': maxPrice,
+      'bedrooms': numberOfBedrooms,
+      'bath': numberOfBathrooms,
+      'area': minUnitArea,
+      'property_type_id': propertyType?.id,
+      'images': images,
+      'currency': currency,
+      'finishing': finishing,
+      'max_installment_years': maxInstallmentYears,
+      'max_installment_years_months': maxInstallmentYearsMonths,
+    };
+  }
 }

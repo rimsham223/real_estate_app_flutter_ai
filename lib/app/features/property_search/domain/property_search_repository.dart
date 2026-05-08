@@ -1,49 +1,60 @@
 import 'package:injectable/injectable.dart';
-import 'package:nawy_ai_app/app/features/property_search/data/sources/remote/models/filter_options.dart';
-import 'package:nawy_ai_app/app/features/property_search/data/sources/remote/models/property_search_response.dart';
-import 'package:nawy_ai_app/app/features/property_search/data/sources/remote/property_search_remote_source.dart';
-import 'package:nawy_ai_app/app/features/property_search/domain/models/area.dart';
-import 'package:nawy_ai_app/app/features/property_search/domain/models/compound.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'models/area.dart';
+import 'models/compound.dart';
+import 'models/property.dart';
 
 @singleton
 class PropertySearchRepository {
-  final PropertySearchRemoteSource _remoteSource;
-
-  PropertySearchRepository(this._remoteSource);
+  final SupabaseClient _supabase = Supabase.instance.client;
 
   Future<List<Area>> getAreas() async {
-    final areaDtos = await _remoteSource.getAreas();
-    return areaDtos.map((dto) => dto.toEntity()).toList();
+    final response = await _supabase.from('areas').select();
+    return response.map((json) => Area.fromJson(json)).toList();
   }
 
   Future<List<Compound>> getCompounds() async {
-    final compoundDtos = await _remoteSource.getCompounds();
-    return compoundDtos.map((dto) => dto.toEntity()).toList();
+    final response = await _supabase.from('compounds').select('*, areas(*)');
+    return response.map((json) => Compound.fromJson(json)).toList();
   }
 
-  Future<FilterOptions> getFilterOptions() async {
-    return await _remoteSource.getFilterOptions();
-  }
-
-  Future<PropertySearchResponse> searchProperties({
+  Future<List<Property>> searchProperties({
     String? searchQuery,
     List<int>? areaIds,
     List<int>? compoundIds,
-    int? minPrice,
-    int? maxPrice,
+    double? minPrice,
+    double? maxPrice,
     int? minBedrooms,
     int? maxBedrooms,
-    List<int>? propertyTypeIds,
   }) async {
-    return await _remoteSource.searchProperties(
-      searchQuery: searchQuery,
-      areaIds: areaIds,
-      compoundIds: compoundIds,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-      minBedrooms: minBedrooms,
-      maxBedrooms: maxBedrooms,
-      propertyTypeIds: propertyTypeIds,
-    );
+    // ✅ Only select existing tables: properties, compounds, areas
+    var query = _supabase.from('properties').select('''
+      *,
+      compounds!inner (
+        *,
+        areas!inner (*)
+      ),
+      areas!inner (*)
+    ''');
+
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      query = query.ilike('name', '%$searchQuery%');
+    }
+
+    if (areaIds != null && areaIds.isNotEmpty) {
+      query = query.inFilter('area_id', areaIds);
+    }
+
+    if (compoundIds != null && compoundIds.isNotEmpty) {
+      query = query.inFilter('compound_id', compoundIds);
+    }
+
+    if (minPrice != null) query = query.gte('min_price', minPrice);
+    if (maxPrice != null) query = query.lte('max_price', maxPrice);
+    if (minBedrooms != null) query = query.gte('bedrooms', minBedrooms);
+    if (maxBedrooms != null) query = query.lte('bedrooms', maxBedrooms);
+
+    final response = await query;
+    return response.map((json) => Property.fromJson(json)).toList();
   }
 }

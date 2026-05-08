@@ -33,13 +33,15 @@ class PropertyHiveAdapter extends TypeAdapter<PropertyHive> {
       ..propertyTypeId = (fields[13] as num?)?.toInt()
       ..areaId = (fields[14] as num?)?.toInt()
       ..developerId = (fields[15] as num?)?.toInt()
-      ..compoundId = (fields[16] as num?)?.toInt();
+      ..compoundId = (fields[16] as num?)?.toInt()
+      ..bedrooms = (fields[17] as num?)?.toInt()
+      ..bathrooms = (fields[18] as num?)?.toInt();
   }
 
   @override
   void write(BinaryWriter writer, PropertyHive obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.propertyId)
       ..writeByte(1)
@@ -73,7 +75,11 @@ class PropertyHiveAdapter extends TypeAdapter<PropertyHive> {
       ..writeByte(15)
       ..write(obj.developerId)
       ..writeByte(16)
-      ..write(obj.compoundId);
+      ..write(obj.compoundId)
+      ..writeByte(17)
+      ..write(obj.bedrooms)
+      ..writeByte(18)
+      ..write(obj.bathrooms);
   }
 
   @override

@@ -45,7 +45,6 @@ class PropertyHive extends HiveObject {
   @HiveField(12)
   bool isFavorite = false;
 
-  // Related entity IDs (relationships handled separately)
   @HiveField(13)
   int? propertyTypeId;
 
@@ -57,6 +56,12 @@ class PropertyHive extends HiveObject {
 
   @HiveField(16)
   int? compoundId;
+
+  @HiveField(17)
+  int? bedrooms;
+
+  @HiveField(18)
+  int? bathrooms;
 
   PropertyHive();
 
@@ -78,6 +83,8 @@ class PropertyHive extends HiveObject {
     this.areaId,
     this.developerId,
     this.compoundId,
+    this.bedrooms,
+    this.bathrooms,
   });
 
   /// Convert persistence model to domain entity
@@ -90,7 +97,7 @@ class PropertyHive extends HiveObject {
       compound: null,
       area: null,
       developer: null,
-      image: image,
+      images: image != null ? [image!] : [],
       finishing: finishing,
       minUnitArea: minUnitArea,
       maxUnitArea: maxUnitArea,
@@ -99,6 +106,8 @@ class PropertyHive extends HiveObject {
       currency: currency,
       maxInstallmentYears: maxInstallmentYears,
       maxInstallmentYearsMonths: maxInstallmentYearsMonths,
+      numberOfBedrooms: bedrooms,
+      numberOfBathrooms: bathrooms,
       isFavorite: isFavorite,
     );
   }
@@ -123,6 +132,8 @@ class PropertyHive extends HiveObject {
       areaId: entity.area?.id,
       developerId: entity.developer?.id,
       compoundId: entity.compound?.id,
+      bedrooms: entity.numberOfBedrooms,
+      bathrooms: entity.numberOfBathrooms,
     );
   }
 }

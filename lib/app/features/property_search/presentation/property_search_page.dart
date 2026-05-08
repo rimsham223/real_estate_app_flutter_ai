@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nawy_ai_app/app/core/injection/injection.dart';
 import 'package:nawy_ai_app/app/core/network/network_aware_widget.dart';
+import 'package:nawy_ai_app/app/core/models/status.dart';
 import 'package:nawy_ai_app/app/features/favorites/presentation/bloc/favorites_bloc_exports.dart';
+import 'package:nawy_ai_app/app/features/property_search/domain/models/property.dart';
 import 'package:nawy_ai_app/app/features/property_search/domain/models/property_filters.dart';
 import 'package:nawy_ai_app/app/features/property_search/domain/property_search_repository.dart';
 import 'package:nawy_ai_app/app/features/property_search/presentation/bloc/property_search_bloc_exports.dart';
-import 'package:nawy_ai_app/app/features/property_search/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:nawy_ai_app/app/features/property_search/presentation/widgets/property_list_view.dart';
 import 'package:nawy_ai_app/app/features/property_search/presentation/widgets/search_bar_widget.dart';
 
@@ -18,17 +19,13 @@ class PropertySearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PropertySearchBloc(getIt<PropertySearchRepository>())
-        ..add(const LoadInitialDataEvent())
-        ..add(const SearchPropertiesEvent(PropertyFilters())),
+        ..add(const LoadPropertiesEvent(PropertyFilters())),
       child: Builder(
         builder: (context) {
           return NetworkAwareWidget(
             child: const _PropertySearchPageContent(),
             onRetry: () {
-              // Access the bloc from the current context
-              final bloc = context.read<PropertySearchBloc>();
-              bloc.add(const LoadInitialDataEvent());
-              bloc.add(const SearchPropertiesEvent(PropertyFilters()));
+              context.read<PropertySearchBloc>().add(const LoadPropertiesEvent(PropertyFilters()));
             },
           );
         },
@@ -51,11 +48,11 @@ class _PropertySearchPageContent extends StatelessWidget {
                 // Search bar
                 SearchBarWidget(
                   hintText: 'Search properties...',
-                  searchQuery: state.searchQuery,
+                  searchQuery: state.currentFilters.searchQuery,
                   onChanged: (query) => _updateSearchQuery(context, query),
                   onFilterTap: () => _showFilterBottomSheet(context, state),
-                  hasActiveFilters: state.hasFiltersApplied,
-                  isLoading: state.isLoading,
+                  hasActiveFilters: state.currentFilters.hasFilters,
+                  isLoading: state.status.isLoading,
                 ),
 
                 // Content based on state
@@ -69,192 +66,57 @@ class _PropertySearchPageContent extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, PropertySearchState state) {
-    // Show loading for initial data
-    if (state.isLoading && !state.hasInitialData && !state.hasSearchResults) {
-      return const InitialLoadingWidget();
+    if (state.status.isLoading && state.properties.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
 
-    // Show error if initial data failed to load
-    if (state.hasError && !state.hasInitialData) {
-      return InitialErrorWidget(
-        errorMessage: state.errorMessage,
-        onRetry: () {
-          context.read<PropertySearchBloc>().add(const LoadInitialDataEvent());
-        },
+    if (state.status.isFailure) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.errorMessage ?? 'An error occurred'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                context.read<PropertySearchBloc>().add(LoadPropertiesEvent(state.currentFilters));
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
       );
     }
 
-    // Show search results if available
-    if (state.hasSearchResults) {
-      return PropertyListView(
-        properties: state.searchResults!.properties.map((dto) => dto.toEntity()).toList(),
-        isLoading: state.isLoading,
-        errorMessage: state.hasError ? state.errorMessage : null,
-        onRetry: () => _retrySearch(context, state),
-        onPropertyTap: (property) => _onPropertyTap(context, property),
-        onFavoriteToggle: (property) => _onFavoriteToggle(context, property),
-      );
+    if (state.status.isSuccess && state.properties.isEmpty) {
+      return const Center(child: Text('No properties found'));
     }
 
-    // Show loading state while waiting for initial search
-    if (state.hasInitialData && state.isLoading) {
-      return const SearchLoadingWidget();
-    }
-
-    // Fallback empty state (should rarely be reached)
-    return const EmptyStateWidget();
+    return PropertyListView(
+      properties: state.properties,
+      isLoading: state.status.isLoading,
+      onPropertyTap: (property) => _onPropertyTap(context, property),
+      onFavoriteToggle: (property) => _onFavoriteToggle(context, property),
+    );
   }
 
   void _updateSearchQuery(BuildContext context, String query) {
     final bloc = context.read<PropertySearchBloc>();
-    bloc.add(SearchWithQueryEvent(query, bloc.state.currentFilters));
+    bloc.add(UpdateFiltersEvent(bloc.state.currentFilters.copyWith(searchQuery: query)));
   }
 
   void _showFilterBottomSheet(BuildContext context, PropertySearchState state) {
-    if (!state.hasInitialData) return;
-
-    final initialData = state.initialData!;
-    final searchBloc = context.read<PropertySearchBloc>(); // Capture the bloc reference
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => BlocProvider.value(
-        value: searchBloc, // Use the captured reference
-        child: FilterBottomSheet(
-          currentFilters: state.currentFilters,
-          areas: initialData.areas,
-          compounds: initialData.compounds,
-          propertyTypes:
-              initialData.filterOptions.propertyTypes?.map((dto) => dto.toEntity()).toList() ?? [],
-          priceOptions: _generatePriceOptions(
-            initialData.filterOptions.minPriceList,
-            initialData.filterOptions.maxPriceList,
-          ),
-          bedroomOptions: const [1, 2, 3, 4, 5, 6],
-        ),
-      ),
+    // Note: This placeholder SnackBar indicates where filter logic should go.
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Filter bottom sheet logic needs to be integrated with updated data source')),
     );
   }
 
-  void _retrySearch(BuildContext context, PropertySearchState state) {
-    final bloc = context.read<PropertySearchBloc>();
-    bloc.add(SearchPropertiesEvent(state.currentFilters));
+  void _onPropertyTap(BuildContext context, Property property) {
+    // Logic for navigating to property details
   }
 
-  void _onPropertyTap(BuildContext context, property) {
-    // Navigate to property details page
-  }
-
-  void _onFavoriteToggle(BuildContext context, property) {
-    final favoritesBloc = context.read<FavoritesBloc>();
-
-    // Toggle favorite status
-    favoritesBloc.add(TogglePropertyFavoriteEvent(property));
-
-    // Favorite toggle handled silently - UI will update automatically
-  }
-
-  List<int> _generatePriceOptions(List<int> minPrices, List<int> maxPrices) {
-    final Set<int> prices = {};
-    prices.addAll(minPrices);
-    prices.addAll(maxPrices);
-
-    final sortedPrices = prices.toList()..sort();
-    return sortedPrices;
-  }
-}
-
-/// Initial loading widget for when the app is loading search options
-class InitialLoadingWidget extends StatelessWidget {
-  const InitialLoadingWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Loading search options...'),
-        ],
-      ),
-    );
-  }
-}
-
-/// Error widget for when initial data fails to load
-class InitialErrorWidget extends StatelessWidget {
-  final String? errorMessage;
-  final VoidCallback onRetry;
-
-  const InitialErrorWidget({super.key, this.errorMessage, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
-            const SizedBox(height: 16),
-            Text(
-              'Failed to load search options',
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              errorMessage ?? 'Please check your internet connection',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Loading widget for when properties are being searched
-class SearchLoadingWidget extends StatelessWidget {
-  const SearchLoadingWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Loading properties...'),
-        ],
-      ),
-    );
-  }
-}
-
-/// Empty state widget for fallback cases
-class EmptyStateWidget extends StatelessWidget {
-  const EmptyStateWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('No data available'));
+  void _onFavoriteToggle(BuildContext context, Property property) {
+    context.read<FavoritesBloc>().add(TogglePropertyFavoriteEvent(property));
   }
 }

@@ -1,0 +1,1052 @@
+{
+  "areas": [
+    {
+      "id": 1,
+      "name": "F Sectors"
+    },
+    {
+      "id": 2,
+      "name": "Bahria Town"
+    },
+    {
+      "id": 3,
+      "name": "G Sectors"
+    },
+    {
+      "id": 4,
+      "name": "DHA Islamabad"
+    },
+    {
+      "id": 5,
+      "name": "PWD"
+    },
+    {
+      "id": 6,
+      "name": "Gulberg"
+    },
+    {
+      "id": 7,
+      "name": "I Sectors"
+    },
+    {
+      "id": 8,
+      "name": "E Sectors"
+    },
+    {
+      "id": 9,
+      "name": "Naval Anchorage"
+    },
+    {
+      "id": 10,
+      "name": "Top City"
+    },
+    {
+      "id": 11,
+      "name": "Park View City"
+    }
+  ],
+  "compounds": [
+    {
+      "id": 1,
+      "name": "F-7",
+      "area_id": 1
+    },
+    {
+      "id": 2,
+      "name": "Bahria Town Phase 4",
+      "area_id": 2
+    },
+    {
+      "id": 3,
+      "name": "G-11",
+      "area_id": 3
+    },
+    {
+      "id": 4,
+      "name": "DHA Phase 2",
+      "area_id": 4
+    },
+    {
+      "id": 5,
+      "name": "PWD Housing Scheme",
+      "area_id": 5
+    },
+    {
+      "id": 6,
+      "name": "Gulberg Greens",
+      "area_id": 6
+    },
+    {
+      "id": 7,
+      "name": "I-8",
+      "area_id": 7
+    },
+    {
+      "id": 8,
+      "name": "Bahria Enclave",
+      "area_id": 2
+    },
+    {
+      "id": 9,
+      "name": "G-13",
+      "area_id": 3
+    },
+    {
+      "id": 10,
+      "name": "Sector E-11",
+      "area_id": 8
+    },
+    {
+      "id": 11,
+      "name": "DHA Phase 1",
+      "area_id": 4
+    },
+    {
+      "id": 12,
+      "name": "I-10",
+      "area_id": 7
+    },
+    {
+      "id": 13,
+      "name": "Bahria Town Phase 7",
+      "area_id": 2
+    },
+    {
+      "id": 14,
+      "name": "F-10",
+      "area_id": 1
+    },
+    {
+      "id": 15,
+      "name": "G-9",
+      "area_id": 3
+    },
+    {
+      "id": 16,
+      "name": "Gulberg Residencia",
+      "area_id": 6
+    },
+    {
+      "id": 17,
+      "name": "I-14",
+      "area_id": 7
+    },
+    {
+      "id": 18,
+      "name": "DHA Phase 5",
+      "area_id": 4
+    },
+    {
+      "id": 19,
+      "name": "G-15",
+      "area_id": 3
+    },
+    {
+      "id": 20,
+      "name": "Bahria Town Phase 3",
+      "area_id": 2
+    },
+    {
+      "id": 21,
+      "name": "PWD Road",
+      "area_id": 5
+    },
+    {
+      "id": 22,
+      "name": "Naval Anchorage",
+      "area_id": 9
+    },
+    {
+      "id": 23,
+      "name": "F-11",
+      "area_id": 1
+    },
+    {
+      "id": 24,
+      "name": "Bahria Town Phase 8",
+      "area_id": 2
+    },
+    {
+      "id": 25,
+      "name": "G-14",
+      "area_id": 3
+    },
+    {
+      "id": 26,
+      "name": "Sector E-7",
+      "area_id": 8
+    },
+    {
+      "id": 27,
+      "name": "DHA Phase 3",
+      "area_id": 4
+    },
+    {
+      "id": 28,
+      "name": "I-9",
+      "area_id": 7
+    },
+    {
+      "id": 29,
+      "name": "Bahria Town Phase 2",
+      "area_id": 2
+    },
+    {
+      "id": 30,
+      "name": "G-10",
+      "area_id": 3
+    },
+    {
+      "id": 31,
+      "name": "Gulberg Heights",
+      "area_id": 6
+    },
+    {
+      "id": 32,
+      "name": "F-8",
+      "area_id": 1
+    },
+    {
+      "id": 33,
+      "name": "DHA Phase 4",
+      "area_id": 4
+    },
+    {
+      "id": 34,
+      "name": "I-11",
+      "area_id": 7
+    },
+    {
+      "id": 35,
+      "name": "Sector E-9",
+      "area_id": 8
+    },
+    {
+      "id": 36,
+      "name": "Bahria Intellectual Village",
+      "area_id": 2
+    },
+    {
+      "id": 37,
+      "name": "G-16",
+      "area_id": 3
+    },
+    {
+      "id": 38,
+      "name": "Bahria Town Phase 6",
+      "area_id": 2
+    },
+    {
+      "id": 39,
+      "name": "F-6",
+      "area_id": 1
+    },
+    {
+      "id": 40,
+      "name": "Gulberg Gardens",
+      "area_id": 6
+    },
+    {
+      "id": 41,
+      "name": "I-12",
+      "area_id": 7
+    },
+    {
+      "id": 42,
+      "name": "DHA Valley",
+      "area_id": 4
+    },
+    {
+      "id": 43,
+      "name": "G-7",
+      "area_id": 3
+    },
+    {
+      "id": 44,
+      "name": "Top City 1",
+      "area_id": 10
+    },
+    {
+      "id": 45,
+      "name": "F-17",
+      "area_id": 1
+    },
+    {
+      "id": 46,
+      "name": "Sector E-16",
+      "area_id": 8
+    },
+    {
+      "id": 47,
+      "name": "Bahria Sports City",
+      "area_id": 2
+    },
+    {
+      "id": 48,
+      "name": "I-15",
+      "area_id": 7
+    },
+    {
+      "id": 49,
+      "name": "Park View City",
+      "area_id": 11
+    },
+    {
+      "id": 50,
+      "name": "G-8",
+      "area_id": 3
+    }
+  ],
+  "properties": [
+    {
+      "id": 1,
+      "name": "3 Bedroom Apartment in F-7",
+      "area_id": 1,
+      "compound_id": 1,
+      "min_price": 4500000,
+      "max_price": 4950000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/1/800/600"
+      ],
+      "bath": 2,
+      "area": 1125,
+      "property_type": "apartment"
+    },
+    {
+      "id": 2,
+      "name": "4 Bedroom Apartment in Bahria Town Phase 4",
+      "area_id": 2,
+      "compound_id": 2,
+      "min_price": 12000000,
+      "max_price": 13200000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/2/800/600"
+      ],
+      "bath": 3,
+      "area": 2250,
+      "property_type": "apartment"
+    },
+    {
+      "id": 3,
+      "name": "2 Bedroom Apartment in G-11",
+      "area_id": 3,
+      "compound_id": 3,
+      "min_price": 8500000,
+      "max_price": 9350000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/3/800/600"
+      ],
+      "bath": 1,
+      "area": 1125,
+      "property_type": "apartment"
+    },
+    {
+      "id": 4,
+      "name": "5 Bedroom Apartment in DHA Phase 2",
+      "area_id": 4,
+      "compound_id": 4,
+      "min_price": 25000000,
+      "max_price": 27500000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/4/800/600"
+      ],
+      "bath": 4,
+      "area": 4500,
+      "property_type": "apartment"
+    },
+    {
+      "id": 5,
+      "name": "3 Bedroom Apartment in PWD Housing Scheme",
+      "area_id": 5,
+      "compound_id": 5,
+      "min_price": 6500000,
+      "max_price": 7150000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/5/800/600"
+      ],
+      "bath": 2,
+      "area": 1575,
+      "property_type": "apartment"
+    },
+    {
+      "id": 6,
+      "name": "4 Bedroom Apartment in Gulberg Greens",
+      "area_id": 6,
+      "compound_id": 6,
+      "min_price": 18000000,
+      "max_price": 19800000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/6/800/600"
+      ],
+      "bath": 3,
+      "area": 2700,
+      "property_type": "apartment"
+    },
+    {
+      "id": 7,
+      "name": "2 Bedroom Apartment in I-8",
+      "area_id": 7,
+      "compound_id": 7,
+      "min_price": 5500000,
+      "max_price": 6050000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/7/800/600"
+      ],
+      "bath": 1,
+      "area": 900,
+      "property_type": "apartment"
+    },
+    {
+      "id": 8,
+      "name": "5 Bedroom Apartment in Bahria Enclave",
+      "area_id": 2,
+      "compound_id": 8,
+      "min_price": 32000000,
+      "max_price": 35200000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/8/800/600"
+      ],
+      "bath": 4,
+      "area": 6750,
+      "property_type": "apartment"
+    },
+    {
+      "id": 9,
+      "name": "3 Bedroom Apartment in G-13",
+      "area_id": 3,
+      "compound_id": 9,
+      "min_price": 7200000,
+      "max_price": 7920000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/9/800/600"
+      ],
+      "bath": 2,
+      "area": 1350,
+      "property_type": "apartment"
+    },
+    {
+      "id": 10,
+      "name": "3 Bedroom Apartment in Sector E-11",
+      "area_id": 8,
+      "compound_id": 10,
+      "min_price": 9500000,
+      "max_price": 10450000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/10/800/600"
+      ],
+      "bath": 2,
+      "area": 1800,
+      "property_type": "apartment"
+    },
+    {
+      "id": 11,
+      "name": "4 Bedroom Apartment in DHA Phase 1",
+      "area_id": 4,
+      "compound_id": 11,
+      "min_price": 15000000,
+      "max_price": 16500000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/11/800/600"
+      ],
+      "bath": 3,
+      "area": 2250,
+      "property_type": "apartment"
+    },
+    {
+      "id": 12,
+      "name": "2 Bedroom Apartment in I-10",
+      "area_id": 7,
+      "compound_id": 12,
+      "min_price": 4800000,
+      "max_price": 5280000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/12/800/600"
+      ],
+      "bath": 1,
+      "area": 900,
+      "property_type": "apartment"
+    },
+    {
+      "id": 13,
+      "name": "5 Bedroom Apartment in Bahria Town Phase 7",
+      "area_id": 2,
+      "compound_id": 13,
+      "min_price": 21000000,
+      "max_price": 23100000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/13/800/600"
+      ],
+      "bath": 4,
+      "area": 4500,
+      "property_type": "apartment"
+    },
+    {
+      "id": 14,
+      "name": "3 Bedroom Apartment in F-10",
+      "area_id": 1,
+      "compound_id": 14,
+      "min_price": 6800000,
+      "max_price": 7480000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/14/800/600"
+      ],
+      "bath": 2,
+      "area": 1200,
+      "property_type": "apartment"
+    },
+    {
+      "id": 15,
+      "name": "3 Bedroom Apartment in G-9",
+      "area_id": 3,
+      "compound_id": 15,
+      "min_price": 8800000,
+      "max_price": 9680000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/15/800/600"
+      ],
+      "bath": 2,
+      "area": 1575,
+      "property_type": "apartment"
+    },
+    {
+      "id": 16,
+      "name": "4 Bedroom Apartment in Gulberg Residencia",
+      "area_id": 6,
+      "compound_id": 16,
+      "min_price": 13500000,
+      "max_price": 14850000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/16/800/600"
+      ],
+      "bath": 3,
+      "area": 2475,
+      "property_type": "apartment"
+    },
+    {
+      "id": 17,
+      "name": "2 Bedroom Apartment in I-14",
+      "area_id": 7,
+      "compound_id": 17,
+      "min_price": 5200000,
+      "max_price": 5720000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/17/800/600"
+      ],
+      "bath": 1,
+      "area": 1125,
+      "property_type": "apartment"
+    },
+    {
+      "id": 18,
+      "name": "5 Bedroom Apartment in DHA Phase 5",
+      "area_id": 4,
+      "compound_id": 18,
+      "min_price": 28000000,
+      "max_price": 30800000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/18/800/600"
+      ],
+      "bath": 4,
+      "area": 5400,
+      "property_type": "apartment"
+    },
+    {
+      "id": 19,
+      "name": "3 Bedroom Apartment in G-15",
+      "area_id": 3,
+      "compound_id": 19,
+      "min_price": 7800000,
+      "max_price": 8580000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/19/800/600"
+      ],
+      "bath": 2,
+      "area": 1350,
+      "property_type": "apartment"
+    },
+    {
+      "id": 20,
+      "name": "4 Bedroom Apartment in Bahria Town Phase 3",
+      "area_id": 2,
+      "compound_id": 20,
+      "min_price": 11000000,
+      "max_price": 12100000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/20/800/600"
+      ],
+      "bath": 3,
+      "area": 2025,
+      "property_type": "apartment"
+    },
+    {
+      "id": 21,
+      "name": "2 Bedroom Apartment in PWD Road",
+      "area_id": 5,
+      "compound_id": 21,
+      "min_price": 4200000,
+      "max_price": 4620000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/21/800/600"
+      ],
+      "bath": 1,
+      "area": 800,
+      "property_type": "apartment"
+    },
+    {
+      "id": 22,
+      "name": "4 Bedroom Apartment in Naval Anchorage",
+      "area_id": 9,
+      "compound_id": 22,
+      "min_price": 17500000,
+      "max_price": 19250000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/22/800/600"
+      ],
+      "bath": 3,
+      "area": 2700,
+      "property_type": "apartment"
+    },
+    {
+      "id": 23,
+      "name": "3 Bedroom Apartment in F-11",
+      "area_id": 1,
+      "compound_id": 23,
+      "min_price": 6200000,
+      "max_price": 6820000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/23/800/600"
+      ],
+      "bath": 2,
+      "area": 1350,
+      "property_type": "apartment"
+    },
+    {
+      "id": 24,
+      "name": "5 Bedroom Apartment in Bahria Town Phase 8",
+      "area_id": 2,
+      "compound_id": 24,
+      "min_price": 24000000,
+      "max_price": 26400000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/24/800/600"
+      ],
+      "bath": 4,
+      "area": 5850,
+      "property_type": "apartment"
+    },
+    {
+      "id": 25,
+      "name": "3 Bedroom Apartment in G-14",
+      "area_id": 3,
+      "compound_id": 25,
+      "min_price": 5800000,
+      "max_price": 6380000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/25/800/600"
+      ],
+      "bath": 2,
+      "area": 1125,
+      "property_type": "apartment"
+    },
+    {
+      "id": 26,
+      "name": "3 Bedroom Apartment in Sector E-7",
+      "area_id": 8,
+      "compound_id": 26,
+      "min_price": 9200000,
+      "max_price": 10120000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/26/800/600"
+      ],
+      "bath": 2,
+      "area": 1400,
+      "property_type": "apartment"
+    },
+    {
+      "id": 27,
+      "name": "4 Bedroom Apartment in DHA Phase 3",
+      "area_id": 4,
+      "compound_id": 27,
+      "min_price": 16500000,
+      "max_price": 18150000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/27/800/600"
+      ],
+      "bath": 3,
+      "area": 2475,
+      "property_type": "apartment"
+    },
+    {
+      "id": 28,
+      "name": "2 Bedroom Apartment in I-9",
+      "area_id": 7,
+      "compound_id": 28,
+      "min_price": 4600000,
+      "max_price": 5060000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/28/800/600"
+      ],
+      "bath": 1,
+      "area": 1012,
+      "property_type": "apartment"
+    },
+    {
+      "id": 29,
+      "name": "6 Bedroom Apartment in Bahria Town Phase 2",
+      "area_id": 2,
+      "compound_id": 29,
+      "min_price": 35000000,
+      "max_price": 38500000,
+      "bedrooms": 6,
+      "images": [
+        "https://picsum.photos/seed/29/800/600"
+      ],
+      "bath": 5,
+      "area": 9000,
+      "property_type": "apartment"
+    },
+    {
+      "id": 30,
+      "name": "3 Bedroom Apartment in G-10",
+      "area_id": 3,
+      "compound_id": 30,
+      "min_price": 7500000,
+      "max_price": 8250000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/30/800/600"
+      ],
+      "bath": 2,
+      "area": 1575,
+      "property_type": "apartment"
+    },
+    {
+      "id": 31,
+      "name": "4 Bedroom Apartment in Gulberg Heights",
+      "area_id": 6,
+      "compound_id": 31,
+      "min_price": 12500000,
+      "max_price": 13750000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/31/800/600"
+      ],
+      "bath": 3,
+      "area": 2250,
+      "property_type": "apartment"
+    },
+    {
+      "id": 32,
+      "name": "2 Bedroom Apartment in F-8",
+      "area_id": 1,
+      "compound_id": 32,
+      "min_price": 5400000,
+      "max_price": 5940000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/32/800/600"
+      ],
+      "bath": 1,
+      "area": 950,
+      "property_type": "apartment"
+    },
+    {
+      "id": 33,
+      "name": "5 Bedroom Apartment in DHA Phase 4",
+      "area_id": 4,
+      "compound_id": 33,
+      "min_price": 22000000,
+      "max_price": 24200000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/33/800/600"
+      ],
+      "bath": 4,
+      "area": 4950,
+      "property_type": "apartment"
+    },
+    {
+      "id": 34,
+      "name": "3 Bedroom Apartment in I-11",
+      "area_id": 7,
+      "compound_id": 34,
+      "min_price": 6900000,
+      "max_price": 7590000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/34/800/600"
+      ],
+      "bath": 2,
+      "area": 1462,
+      "property_type": "apartment"
+    },
+    {
+      "id": 35,
+      "name": "3 Bedroom Apartment in Sector E-9",
+      "area_id": 8,
+      "compound_id": 35,
+      "min_price": 9800000,
+      "max_price": 10780000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/35/800/600"
+      ],
+      "bath": 2,
+      "area": 1800,
+      "property_type": "apartment"
+    },
+    {
+      "id": 36,
+      "name": "4 Bedroom Villa in Bahria Intellectual Village",
+      "area_id": 2,
+      "compound_id": 36,
+      "min_price": 14500000,
+      "max_price": 15950000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/36/800/600"
+      ],
+      "bath": 3,
+      "area": 2475,
+      "property_type": "villa"
+    },
+    {
+      "id": 37,
+      "name": "2 Bedroom Apartment in G-16",
+      "area_id": 3,
+      "compound_id": 37,
+      "min_price": 5100000,
+      "max_price": 5610000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/37/800/600"
+      ],
+      "bath": 1,
+      "area": 1125,
+      "property_type": "apartment"
+    },
+    {
+      "id": 38,
+      "name": "5 Bedroom Apartment in Bahria Town Phase 6",
+      "area_id": 2,
+      "compound_id": 38,
+      "min_price": 29000000,
+      "max_price": 31900000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/38/800/600"
+      ],
+      "bath": 4,
+      "area": 6300,
+      "property_type": "apartment"
+    },
+    {
+      "id": 39,
+      "name": "3 Bedroom Apartment in F-6",
+      "area_id": 1,
+      "compound_id": 39,
+      "min_price": 8200000,
+      "max_price": 9020000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/39/800/600"
+      ],
+      "bath": 2,
+      "area": 1300,
+      "property_type": "apartment"
+    },
+    {
+      "id": 40,
+      "name": "4 Bedroom Apartment in Gulberg Gardens",
+      "area_id": 6,
+      "compound_id": 40,
+      "min_price": 11500000,
+      "max_price": 12650000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/40/800/600"
+      ],
+      "bath": 3,
+      "area": 2137,
+      "property_type": "apartment"
+    },
+    {
+      "id": 41,
+      "name": "2 Bedroom Apartment in I-12",
+      "area_id": 7,
+      "compound_id": 41,
+      "min_price": 4400000,
+      "max_price": 4840000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/41/800/600"
+      ],
+      "bath": 1,
+      "area": 850,
+      "property_type": "apartment"
+    },
+    {
+      "id": 42,
+      "name": "4 Bedroom Apartment in DHA Valley",
+      "area_id": 4,
+      "compound_id": 42,
+      "min_price": 19500000,
+      "max_price": 21450000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/42/800/600"
+      ],
+      "bath": 3,
+      "area": 2925,
+      "property_type": "apartment"
+    },
+    {
+      "id": 43,
+      "name": "3 Bedroom Apartment in G-7",
+      "area_id": 3,
+      "compound_id": 43,
+      "min_price": 6400000,
+      "max_price": 7040000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/43/800/600"
+      ],
+      "bath": 2,
+      "area": 1350,
+      "property_type": "apartment"
+    },
+    {
+      "id": 44,
+      "name": "5 Bedroom Apartment in Top City 1",
+      "area_id": 10,
+      "compound_id": 44,
+      "min_price": 26000000,
+      "max_price": 28600000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/44/800/600"
+      ],
+      "bath": 4,
+      "area": 5625,
+      "property_type": "apartment"
+    },
+    {
+      "id": 45,
+      "name": "3 Bedroom Apartment in F-17",
+      "area_id": 1,
+      "compound_id": 45,
+      "min_price": 5600000,
+      "max_price": 6160000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/45/800/600"
+      ],
+      "bath": 2,
+      "area": 1237,
+      "property_type": "apartment"
+    },
+    {
+      "id": 46,
+      "name": "3 Bedroom Apartment in Sector E-16",
+      "area_id": 8,
+      "compound_id": 46,
+      "min_price": 8600000,
+      "max_price": 9460000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/46/800/600"
+      ],
+      "bath": 2,
+      "area": 1250,
+      "property_type": "apartment"
+    },
+    {
+      "id": 47,
+      "name": "4 Bedroom Apartment in Bahria Sports City",
+      "area_id": 2,
+      "compound_id": 47,
+      "min_price": 15500000,
+      "max_price": 17050000,
+      "bedrooms": 4,
+      "images": [
+        "https://picsum.photos/seed/47/800/600"
+      ],
+      "bath": 3,
+      "area": 2362,
+      "property_type": "apartment"
+    },
+    {
+      "id": 48,
+      "name": "2 Bedroom Apartment in I-15",
+      "area_id": 7,
+      "compound_id": 48,
+      "min_price": 4900000,
+      "max_price": 5390000,
+      "bedrooms": 2,
+      "images": [
+        "https://picsum.photos/seed/48/800/600"
+      ],
+      "bath": 1,
+      "area": 900,
+      "property_type": "apartment"
+    },
+    {
+      "id": 49,
+      "name": "5 Bedroom Apartment in Park View City",
+      "area_id": 11,
+      "compound_id": 49,
+      "min_price": 31000000,
+      "max_price": 34100000,
+      "bedrooms": 5,
+      "images": [
+        "https://picsum.photos/seed/49/800/600"
+      ],
+      "bath": 4,
+      "area": 7200,
+      "property_type": "apartment"
+    },
+    {
+      "id": 50,
+      "name": "3 Bedroom Apartment in G-8",
+      "area_id": 3,
+      "compound_id": 50,
+      "min_price": 7100000,
+      "max_price": 7810000,
+      "bedrooms": 3,
+      "images": [
+        "https://picsum.photos/seed/50/800/600"
+      ],
+      "bath": 2,
+      "area": 1687,
+      "property_type": "apartment"
+    }
+  ]
+}

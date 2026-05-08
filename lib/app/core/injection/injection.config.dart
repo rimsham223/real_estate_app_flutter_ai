@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:nawy_ai_app/app/core/injection/injection_module.dart' as _i237;
+import 'package:nawy_ai_app/app/core/services/auth_service.dart' as _i292;
 import 'package:nawy_ai_app/app/core/utils/app_logger.dart' as _i642;
 import 'package:nawy_ai_app/app/core/utils/dio_client.dart' as _i420;
 import 'package:nawy_ai_app/app/core/utils/hive_service.dart' as _i38;
@@ -23,10 +24,10 @@ import 'package:nawy_ai_app/app/features/favorites/data/sources/local/favorites_
     as _i667;
 import 'package:nawy_ai_app/app/features/favorites/presentation/bloc/favorites_bloc.dart'
     as _i378;
-import 'package:nawy_ai_app/app/features/property_search/data/sources/remote/property_search_remote_source.dart'
-    as _i651;
 import 'package:nawy_ai_app/app/features/property_search/domain/property_search_repository.dart'
     as _i737;
+import 'package:nawy_ai_app/app/features/property_search/presentation/bloc/property_search_bloc.dart'
+    as _i288;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -44,23 +45,20 @@ extension GetItInjectableX on _i174.GetIt {
       () => injectionModule.appLogger,
       preResolve: true,
     );
+    gh.singleton<_i292.AuthService>(() => _i292.AuthService());
+    gh.singleton<_i994.AiService>(() => _i994.AiService());
+    gh.singleton<_i737.PropertySearchRepository>(
+      () => _i737.PropertySearchRepository(),
+    );
     gh.singleton<_i420.DioClient>(() => _i420.DioClient(gh<_i642.AppLogger>()));
-    gh.singleton<_i651.PropertySearchRemoteSource>(
-      () => _i651.PropertySearchRemoteSource(gh<_i420.DioClient>()),
+    gh.factory<_i288.PropertySearchBloc>(
+      () => _i288.PropertySearchBloc(gh<_i737.PropertySearchRepository>()),
     );
     gh.factory<_i667.FavoritesLocalSource>(
       () => _i667.FavoritesLocalSource(gh<_i38.HiveService>()),
     );
-    gh.singleton<_i737.PropertySearchRepository>(
-      () => _i737.PropertySearchRepository(
-        gh<_i651.PropertySearchRemoteSource>(),
-      ),
-    );
     gh.singleton<_i641.FavoritesRepository>(
       () => _i641.FavoritesRepository(gh<_i667.FavoritesLocalSource>()),
-    );
-    gh.singleton<_i994.AiService>(
-      () => _i994.AiService(gh<_i737.PropertySearchRepository>()),
     );
     gh.factory<_i378.FavoritesBloc>(
       () => _i378.FavoritesBloc(

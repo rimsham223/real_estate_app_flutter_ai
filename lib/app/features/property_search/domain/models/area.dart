@@ -1,17 +1,31 @@
-import 'package:equatable/equatable.dart';
-
-/// Domain entity for Area - used in business logic
-class Area extends Equatable {
+class Area {
   final int id;
   final String name;
   final String? slug;
   final Map<String, String>? translations;
 
-  const Area({required this.id, required this.name, this.slug, this.translations});
+  Area({
+    required this.id, 
+    required this.name, 
+    this.slug,
+    this.translations,
+  });
 
-  @override
-  List<Object?> get props => [id, name, slug, translations];
+  factory Area.fromJson(Map<String, dynamic> json) {
+    return Area(
+      id: json['id'],
+      name: json['name'] ?? '',
+      slug: json['slug'],
+      translations: json['translations'] != null ? Map<String, String>.from(json['translations']) : null,
+    );
+  }
 
-  @override
-  String toString() => 'Area(id: $id, name: $name)';
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'slug': slug,
+      'translations': translations,
+    };
+  }
 }

@@ -1,17 +1,31 @@
-import 'package:equatable/equatable.dart';
-
-/// Domain entity for Developer - pure business logic model
-class Developer extends Equatable {
+class Developer {
   final int id;
   final String name;
   final String? slug;
   final String? logoPath;
 
-  const Developer({required this.id, required this.name, this.slug, this.logoPath});
+  Developer({
+    required this.id,
+    required this.name,
+    this.slug,
+    this.logoPath,
+  });
 
-  @override
-  List<Object?> get props => [id, name, slug, logoPath];
+  factory Developer.fromJson(Map<String, dynamic> json) {
+    return Developer(
+      id: json['id'],
+      name: json['name'] ?? '',
+      slug: json['slug'],
+      logoPath: json['logo_path'] ?? json['logo'],
+    );
+  }
 
-  @override
-  String toString() => 'Developer(id: $id, name: $name)';
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'slug': slug,
+      'logo_path': logoPath,
+    };
+  }
 }
