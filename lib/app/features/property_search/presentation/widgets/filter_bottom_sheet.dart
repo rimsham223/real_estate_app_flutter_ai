@@ -284,10 +284,10 @@ class PropertyTypesFilterSection extends StatelessWidget {
 /// Price range filter section widget
 class PriceRangeFilterSection extends StatelessWidget {
   final List<int> priceOptions;
-  final int? minPrice;
-  final int? maxPrice;
-  final Function(int?) onMinPriceChanged;
-  final Function(int?) onMaxPriceChanged;
+  final double? minPrice;
+  final double? maxPrice;
+  final ValueChanged<double?> onMinPriceChanged;
+  final ValueChanged<double?> onMaxPriceChanged;
 
   const PriceRangeFilterSection({
     super.key,
@@ -309,10 +309,13 @@ class PriceRangeFilterSection extends StatelessWidget {
 
     final minOption = priceOptions.first.toDouble();
     final maxOption = priceOptions.last.toDouble();
+    if (minOption >= maxOption) {
+      return const SizedBox.shrink();
+    }
 
     // Current range values
-    final currentMin = (minPrice ?? minOption.toInt()).toDouble();
-    final currentMax = (maxPrice ?? maxOption.toInt()).toDouble();
+    final currentMin = (minPrice ?? minOption).clamp(minOption, maxOption).toDouble();
+    final currentMax = (maxPrice ?? maxOption).clamp(currentMin, maxOption).toDouble();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,8 +356,8 @@ class PriceRangeFilterSection extends StatelessWidget {
           divisions: 20,
           labels: RangeLabels(_formatPrice(currentMin), _formatPrice(currentMax)),
           onChanged: (RangeValues values) {
-            onMinPriceChanged(values.start.round());
-            onMaxPriceChanged(values.end.round());
+            onMinPriceChanged(values.start);
+            onMaxPriceChanged(values.end);
           },
         ),
       ],
@@ -395,14 +398,17 @@ class BedroomsFilterSection extends StatelessWidget {
 
     // Get actual min and max from bedroom options, with fallbacks
     final minOption = bedroomOptions.isNotEmpty ? bedroomOptions.first.toDouble() : 1.0;
-    final maxOption = bedroomOptions.isNotEmpty ? bedroomOptions.last.toDouble() : 6.0;
+    var maxOption = bedroomOptions.isNotEmpty ? bedroomOptions.last.toDouble() : 6.0;
+    if (maxOption <= minOption) {
+      maxOption = minOption + 1;
+    }
 
     // Use actual bedroom options length for divisions, or default to 5
     final divisions = bedroomOptions.length > 1 ? bedroomOptions.length - 1 : 5;
 
     // Current range values
-    final currentMin = (minBedrooms ?? minOption.toInt()).toDouble();
-    final currentMax = (maxBedrooms ?? maxOption.toInt()).toDouble();
+    final currentMin = (minBedrooms ?? minOption.toInt()).clamp(minOption.toInt(), maxOption.toInt()).toDouble();
+    final currentMax = (maxBedrooms ?? maxOption.toInt()).clamp(currentMin.toInt(), maxOption.toInt()).toDouble();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -493,7 +499,6 @@ class FilterBottomButtons extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   context.read<PropertySearchBloc>().add(UpdateFiltersEvent(filters));
-                  context.read<PropertySearchBloc>().add(SearchPropertiesEvent(filters));
                   Navigator.of(context).pop();
                 },
                 child: const Text('Apply Filters'),

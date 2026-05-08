@@ -33,7 +33,7 @@ class Compound {
   factory Compound.fromJson(Map<String, dynamic> json) {
     return Compound(
       id: json['id'],
-      areaId: json['area_id'],
+      areaId: json['area_id'] ?? json['area']?['id'] ?? 0,
       name: json['name'] ?? '',
       slug: json['slug'],
       imagePath: json['image_path'],
@@ -42,7 +42,11 @@ class Compound {
       nawyOrganizationId: json['nawy_organization_id'],
       hasOffers: json['has_offers'] ?? false,
       isFavorite: json['is_favorite'] ?? false,
-      area: json['areas'] != null ? Area.fromJson(json['areas']) : null,
+      area: json['areas'] != null
+          ? Area.fromJson(json['areas'])
+          : json['area'] is Map<String, dynamic>
+              ? Area.fromJson(json['area'])
+              : null,
       developer: json['developers'] != null ? Developer.fromJson(json['developers']) : null,
     );
   }
