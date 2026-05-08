@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nawy_ai_app/app/core/injection/injection.dart';
+import 'package:nawy_ai_app/app/core/models/status.dart';
 import 'package:nawy_ai_app/app/core/network/network_aware_widget.dart';
 import 'package:nawy_ai_app/app/core/services/auth_service.dart';
 import 'package:nawy_ai_app/app/features/favorites/presentation/bloc/favorites_bloc_exports.dart';
