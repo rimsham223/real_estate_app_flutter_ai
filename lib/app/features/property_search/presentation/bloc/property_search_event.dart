@@ -7,7 +7,6 @@ abstract class PropertySearchEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Event to load properties with filters
 class LoadPropertiesEvent extends PropertySearchEvent {
   final PropertyFilters filters;
   const LoadPropertiesEvent(this.filters);
@@ -15,10 +14,20 @@ class LoadPropertiesEvent extends PropertySearchEvent {
   List<Object?> get props => [filters];
 }
 
-// Event to update filters (e.g., from UI)
+class SearchPropertiesEvent extends PropertySearchEvent {
+  final PropertyFilters filters;
+  const SearchPropertiesEvent(this.filters);
+  @override
+  List<Object?> get props => [filters];
+}
+
 class UpdateFiltersEvent extends PropertySearchEvent {
   final PropertyFilters filters;
   const UpdateFiltersEvent(this.filters);
   @override
   List<Object?> get props => [filters];
+}
+
+class ClearFiltersEvent extends PropertySearchEvent {
+  const ClearFiltersEvent();
 }

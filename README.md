@@ -132,6 +132,28 @@ lib/
 
 ---
 
+## 🔐 Supabase Email OTP Setup
+
+This app signs users in by asking them to type a 6-digit email OTP code. Supabase uses the same `signInWithOtp` API for both Magic Links and OTP codes, so the email template decides what the user receives:
+
+1. Open your Supabase project dashboard.
+2. Go to **Authentication → Email Templates → Magic Link**.
+3. Replace the clickable magic-link body with a code-only template that includes `{{ .Token }}` and does **not** include `{{ .ConfirmationURL }}`.
+4. Save the template, then try signing in again with an existing account.
+
+Example Magic Link template body:
+
+```html
+<h2>Your sign-in code</h2>
+<p>Enter this 6-digit code in the app:</p>
+<p style="font-size: 32px; font-weight: 700; letter-spacing: 8px;">{{ .Token }}</p>
+<p>This code expires soon. If you did not request it, you can ignore this email.</p>
+```
+
+Important: configure the **Magic Link** template, not only the **Confirm Signup** template. New users can receive the signup/confirmation template, while existing users receive the Magic Link template on later sign-ins.
+
+---
+
 ## 🚀 Quick Start
 
 ```bash
