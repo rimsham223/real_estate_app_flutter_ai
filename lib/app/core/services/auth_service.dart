@@ -12,6 +12,7 @@ class AuthService {
   Future<void> sendOtp(String email) async {
     await _supabase.auth.signInWithOtp(
       email: email,
+      shouldCreateUser: true,
       emailRedirectTo: 'io.supabase.flutter://reset-callback',
     );
   }
@@ -19,7 +20,7 @@ class AuthService {
   Future<AuthResponse> verifyOtp(String email, String token) async {
     return await _supabase.auth.verifyOTP(
       email: email,
-      token: token,
+      token: token.trim(),
       type: OtpType.email,
     );
   }

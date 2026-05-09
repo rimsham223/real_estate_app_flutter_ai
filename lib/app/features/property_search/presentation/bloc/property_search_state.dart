@@ -58,7 +58,7 @@ class PropertySearchState extends Equatable {
   List<int> get priceOptions {
     final prices = properties.map((property) => property.minPrice?.round()).whereType<int>().toList()..sort();
     if (prices.isEmpty) return const [1000000, 5000000, 10000000, 20000000, 30000000];
-    return [prices.first, prices[(prices.length / 2).floor()], prices.last].toSet().toList()..sort();
+    return {prices.first, prices[(prices.length / 2).floor()], prices.last}.toList()..sort();
   }
 
   List<int> get bedroomOptions {
