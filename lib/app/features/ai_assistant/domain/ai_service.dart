@@ -4,6 +4,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 @singleton
 class AiService {
   final SupabaseClient _supabase = Supabase.instance.client;
+  final PropertySearchRepository _propertyRepository;
+
+  AiService({PropertySearchRepository? propertyRepository})
+      : _propertyRepository = propertyRepository ?? PropertySearchRepository();
 
   Future<String> sendMessage(String message, List<Map<String, String>> history) async {
     try {
