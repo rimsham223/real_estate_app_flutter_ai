@@ -54,8 +54,7 @@ flutter:
   
   assets:
     - properties.json
-    - assets/nawy_logo.png
-    - assets/app_icon.png
+    - assets/
 
 # Flutter Native Splash Configuration
 flutter_native_splash:

@@ -12,6 +12,7 @@ class AuthService {
   Future<void> sendOtp(String email) async {
     await _supabase.auth.signInWithOtp(
       email: email,
+      shouldCreateUser: true,
       emailRedirectTo: 'io.supabase.flutter://reset-callback',
     );
   }
@@ -19,7 +20,7 @@ class AuthService {
   Future<AuthResponse> verifyOtp(String email, String token) async {
     return await _supabase.auth.verifyOTP(
       email: email,
-      token: token,
+      token: token.trim(),
       type: OtpType.email,
     );
   }
@@ -29,6 +30,27 @@ class AuthService {
       'id': userId,
       'email': email,
       'full_name': fullName,
+    });
+  }
+
+  Future<Map<String, dynamic>?> getProfile() async {
+    final user = currentUser;
+    if (user == null) return null;
+
+    final profile = await _supabase.from('profiles').select().eq('id', user.id).maybeSingle();
+    return profile;
+  }
+
+  Future<void> updateProfile({String? fullName, String? phone}) async {
+    final user = currentUser;
+    if (user == null) return;
+
+    await _supabase.from('profiles').upsert({
+      'id': user.id,
+      'email': user.email,
+      'full_name': fullName,
+      'phone': phone,
+      'updated_at': DateTime.now().toIso8601String(),
     });
   }
 

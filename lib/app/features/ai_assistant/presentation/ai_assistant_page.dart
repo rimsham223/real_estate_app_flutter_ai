@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:nawy_ai_app/app/core/injection/injection.dart';
-import 'package:nawy_ai_app/app/core/network/network_cubit.dart';
 import 'package:nawy_ai_app/app/features/ai_assistant/domain/ai_service.dart';
 import 'package:nawy_ai_app/app/features/ai_assistant/presentation/bloc/ai_assistant_bloc.dart';
 import 'package:nawy_ai_app/app/features/ai_assistant/presentation/models/assistant_message.dart';
@@ -32,6 +31,13 @@ class _AiAssistantViewState extends State<_AiAssistantView> {
   final FocusNode _messageFocusNode = FocusNode();
   int _previousMessageCount = 0;
 
+  static const List<String> _prompts = [
+    'Find 3 bedroom homes under 10M EGP',
+    'Which filters should I use for a family home?',
+    'Compare apartments vs villas',
+    'Help me shortlist by location',
+  ];
+
   @override
   void dispose() {
     _messageController.dispose();
@@ -40,48 +46,20 @@ class _AiAssistantViewState extends State<_AiAssistantView> {
     super.dispose();
   }
 
-  Future<void> _sendMessage() async {
-    final message = _messageController.text.trim();
+  void _sendMessage([String? quickPrompt]) {
+    final message = (quickPrompt ?? _messageController.text).trim();
     if (message.isEmpty) return;
 
-    // Store context in a local variable before any async operations
-    final currentContext = context;
-
-    // Check network connection
-    final networkCubit = currentContext.read<NetworkCubit>();
-    final isConnected = await networkCubit.checkConnection();
-
-    // Check if widget is still mounted after async operation
-    if (!mounted) return;
-
-    if (!isConnected) {
-      if (!currentContext.mounted) return;
-      ScaffoldMessenger.of(currentContext).showSnackBar(
-        const SnackBar(
-          content: Text('Please check your internet connection and try again'),
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 3),
-        ),
-      );
-      return;
-    }
-
-    if (message.isNotEmpty) {
-      if (!mounted) return;
-      currentContext.read<AiAssistantBloc>().add(SendMessageEvent(message));
-      _messageController.clear();
-      // Keep focus on the text field after sending
-      _messageFocusNode.requestFocus();
-      // Don't scroll here - let the listener handle it
-    }
+    context.read<AiAssistantBloc>().add(SendMessageEvent(message));
+    _messageController.clear();
+    _messageFocusNode.requestFocus();
   }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        // For reverse ListView, scroll to position 0 (which is the bottom)
         _scrollController.animateTo(
-          0.0,
+          0,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -91,22 +69,21 @@ class _AiAssistantViewState extends State<_AiAssistantView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nawy AI Assistant'),
         actions: [
           IconButton(
-            padding: EdgeInsets.only(right: 12),
+            tooltip: 'Start new chat',
+            padding: const EdgeInsets.only(right: 12),
             icon: const Icon(Icons.add_comment_outlined),
-            onPressed: () {
-              context.read<AiAssistantBloc>().add(const StartNewChatEvent());
-            },
+            onPressed: () => context.read<AiAssistantBloc>().add(const StartNewChatEvent()),
           ),
         ],
       ),
       body: BlocConsumer<AiAssistantBloc, AiAssistantState>(
         listener: (context, state) {
-          // Only scroll when new messages are added
           if (state.messages.length > _previousMessageCount) {
             _previousMessageCount = state.messages.length;
             _scrollToBottom();
@@ -119,59 +96,38 @@ class _AiAssistantViewState extends State<_AiAssistantView> {
 
           return Column(
             children: [
+              const _AssistantHero(),
               Expanded(
                 child: state.messages.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'Ask me anything about properties!\n\nI can help you search for properties, find areas, compounds, and filter options.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      )
+                    ? _EmptyAssistantState(prompts: _prompts, onPromptTap: _sendMessage)
                     : ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: state.messages.length,
                         reverse: true,
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                        itemCount: state.messages.length + (state.isLoading ? 1 : 0),
                         itemBuilder: (context, index) {
-                          final message = state.messages[index];
-                          return _AssistantBubble(message: message);
+                          if (state.isLoading && index == 0) {
+                            return const Align(alignment: Alignment.centerLeft, child: _TypingIndicator());
+                          }
+                          final messageIndex = state.isLoading ? index - 1 : index;
+                          return _MessageBubble(message: state.messages[messageIndex]);
                         },
                       ),
               ),
-              if (state.isLoading) const _TypingIndicator(),
-              if (state.hasError)
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red[200]!),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: Colors.red[600]),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          state.errorMessage ?? 'An error occurred',
-                          style: TextStyle(color: Colors.red[600]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 12,
+                  bottom: 12 + MediaQuery.of(context).padding.bottom,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.colorScheme.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.2),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, -2),
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 16,
+                      offset: const Offset(0, -4),
                     ),
                   ],
                 ),
@@ -181,42 +137,27 @@ class _AiAssistantViewState extends State<_AiAssistantView> {
                       child: TextField(
                         controller: _messageController,
                         focusNode: _messageFocusNode,
+                        minLines: 1,
+                        maxLines: 4,
+                        textInputAction: TextInputAction.send,
+                        onSubmitted: (_) => _sendMessage(),
                         decoration: InputDecoration(
-                          hintText: 'Type your message...',
+                          hintText: 'Ask about budget, areas, or property types...',
+                          prefixIcon: const Icon(Icons.auto_awesome_outlined),
+                          filled: true,
+                          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.55),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
                           ),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         ),
-                        maxLines: null,
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) {
-                          _sendMessage();
-                          FocusScope.of(context).unfocus();
-                        },
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => _sendMessage(),
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.send, color: Colors.white, size: 20),
-                      ),
+                    const SizedBox(width: 10),
+                    IconButton.filled(
+                      onPressed: state.isLoading ? null : () => _sendMessage(),
+                      icon: const Icon(Icons.send_rounded),
                     ),
                   ],
                 ),
@@ -224,6 +165,119 @@ class _AiAssistantViewState extends State<_AiAssistantView> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _AssistantHero extends StatelessWidget {
+  const _AssistantHero();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [theme.colorScheme.primary, theme.colorScheme.secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(26),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.auto_awesome_rounded, color: Colors.white),
+              const SizedBox(width: 8),
+              Text('Smart property advisor', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Ask for a shortlist strategy, budget guidance, area comparison, or filter recommendations.',
+            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.9)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyAssistantState extends StatelessWidget {
+  final List<String> prompts;
+  final ValueChanged<String> onPromptTap;
+
+  const _EmptyAssistantState({required this.prompts, required this.onPromptTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(24),
+      children: [
+        const Icon(Icons.chat_bubble_outline_rounded, size: 72),
+        const SizedBox(height: 12),
+        Text('Start with a goal', textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 8),
+        Text(
+          'The assistant can translate your needs into concrete search filters and explain tradeoffs.',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 24),
+        ...prompts.map(
+          (prompt) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: OutlinedButton.icon(
+              onPressed: () => onPromptTap(prompt),
+              icon: const Icon(Icons.north_east_rounded, size: 18),
+              label: Text(prompt),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MessageBubble extends StatelessWidget {
+  final AssistantMessage message;
+
+  const _MessageBubble({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isUser = message.isUser;
+    return Align(
+      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.82),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isUser ? theme.colorScheme.primary : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20),
+            bottomLeft: Radius.circular(isUser ? 20 : 6),
+            bottomRight: Radius.circular(isUser ? 6 : 20),
+          ),
+        ),
+        child: isUser
+            ? Text(message.text, style: const TextStyle(color: Colors.white, height: 1.35))
+            : MarkdownBody(
+                data: message.text,
+                selectable: true,
+                styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
+                  p: theme.textTheme.bodyMedium?.copyWith(height: 1.45),
+                ),
+              ),
       ),
     );
   }
@@ -237,25 +291,22 @@ class _TypingIndicator extends StatefulWidget {
 }
 
 class _TypingIndicatorState extends State<_TypingIndicator> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late List<Animation<double>> _dotAnimations;
+  late final AnimationController _controller;
+  late final List<Animation<double>> _dotAnimations;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
-
-    // Create staggered animations for 3 dots
-    _dotAnimations = List.generate(3, (index) {
-      return Tween<double>(begin: 0.4, end: 1.0).animate(
+    _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this)..repeat();
+    _dotAnimations = List.generate(
+      3,
+      (index) => Tween<double>(begin: 0.35, end: 1).animate(
         CurvedAnimation(
           parent: _controller,
           curve: Interval(index * 0.2, 0.6 + index * 0.2, curve: Curves.easeInOut),
         ),
-      );
-    });
-
-    _controller.repeat();
+      ),
+    );
   }
 
   @override
@@ -267,131 +318,29 @@ class _TypingIndicatorState extends State<_TypingIndicator> with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.smart_toy, color: Theme.of(context).primaryColor, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...List.generate(3, (index) {
-                  return AnimatedBuilder(
-                    animation: _dotAnimations[index],
-                    builder: (context, child) {
-                      return Container(
-                        margin: EdgeInsets.only(right: index < 2 ? 4 : 0),
-                        child: Opacity(
-                          opacity: _dotAnimations[index].value,
-                          child: Transform.scale(
-                            scale: _dotAnimations[index].value,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withValues(alpha: 0.7),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                }),
-              ],
-            ),
-          ),
-        ],
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(18),
       ),
-    );
-  }
-}
-
-class _AssistantBubble extends StatelessWidget {
-  final AssistantMessage message;
-
-  const _AssistantBubble({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (!message.isUser) ...[
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(color: Colors.grey[300], shape: BoxShape.circle),
-              child: const Icon(Icons.smart_toy, color: Colors.grey),
-            ),
-            const SizedBox(width: 12),
-          ],
-          Flexible(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(
+          3,
+          (index) => FadeTransition(
+            opacity: _dotAnimations[index],
             child: Container(
-              padding: const EdgeInsets.all(12),
+              width: 8,
+              height: 8,
+              margin: const EdgeInsets.symmetric(horizontal: 3),
               decoration: BoxDecoration(
-                color: message.isUser
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: MarkdownBody(
-                data: message.text,
-                styleSheet: MarkdownStyleSheet(
-                  p: TextStyle(color: message.isUser ? Colors.white : Colors.black87, fontSize: 16),
-                  strong: TextStyle(
-                    color: message.isUser ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  em: TextStyle(
-                    color: message.isUser ? Colors.white : Colors.black87,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  a: TextStyle(
-                    color: message.isUser ? Colors.blue[200] : Colors.blue[700],
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-                onTapLink: (text, href, title) {
-                  if (href != null) {
-                    // Handle link taps here if needed
-                  }
-                },
-                selectable: true,
-              ),
-            ),
-          ),
-          if (message.isUser) ...[
-            const SizedBox(width: 12),
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.person, color: Colors.white),
             ),
-          ],
-        ],
+          ),
+        ),
       ),
     );
   }

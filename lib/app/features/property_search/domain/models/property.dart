@@ -58,11 +58,15 @@ class Property {
     Compound? compound;
     if (json['compounds'] != null) {
       compound = Compound.fromJson(json['compounds']);
+    } else if (json['compound'] != null) {
+      compound = Compound.fromJson(json['compound']);
     }
 
     Area? area;
     if (json['areas'] != null) {
       area = Area.fromJson(json['areas']);
+    } else if (json['area_data'] != null) {
+      area = Area.fromJson(json['area_data']);
     } else if (compound?.area != null) {
       area = compound?.area;
     }
@@ -70,11 +74,20 @@ class Property {
     Developer? developer;
     if (json['developers'] != null) {
       developer = Developer.fromJson(json['developers']);
+    } else if (json['developer'] != null) {
+      developer = Developer.fromJson(json['developer']);
     }
 
     PropertyType? propertyType;
     if (json['property_types'] != null) {
       propertyType = PropertyType.fromJson(json['property_types']);
+    } else if (json['property_type'] is Map<String, dynamic>) {
+      propertyType = PropertyType.fromJson(json['property_type']);
+    } else if (json['property_type'] is String) {
+      propertyType = PropertyType(
+        id: json['property_type_id'] ?? 0,
+        name: json['property_type'],
+      );
     }
 
     return Property(
@@ -91,7 +104,7 @@ class Property {
       minUnitArea: (json['area'] as num?)?.toDouble() ?? (json['min_unit_area'] as num?)?.toDouble(),
       maxUnitArea: (json['max_unit_area'] as num?)?.toDouble(),
       propertyType: propertyType,
-      images: json['images'] != null ? List<String>.from(json['images']) : [],
+      images: _parseImages(json),
       currency: json['currency'] ?? 'EGP',
       finishing: json['finishing'],
       maxInstallmentYears: json['max_installment_years'],
@@ -101,6 +114,18 @@ class Property {
       developer: developer,
       isFavorite: json['is_favorite'] ?? false,
     );
+  }
+
+  static List<String> _parseImages(Map<String, dynamic> json) {
+    final images = json['images'];
+    if (images is List) {
+      return images.whereType<String>().where((url) => url.trim().isNotEmpty).toList();
+    }
+    final image = json['image'];
+    if (image is String && image.trim().isNotEmpty) {
+      return [image];
+    }
+    return const [];
   }
 
   Property copyWith({
